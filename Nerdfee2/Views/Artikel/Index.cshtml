@@ -1,0 +1,84 @@
+@using PagedList;
+@using PagedList.Mvc;
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+    <!-- Main Content -->
+    <div class="container">  
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">      
+                @foreach (var item in Model)
+                {
+                    <div class="post-preview">
+                        @if (!string.IsNullOrEmpty(item.Kategorie))
+                        {
+                            foreach (var t in item.Kategorie.Split(','))
+                            {
+                            <a href="@Url.Action("Index", "Artikel", new { kategorie = t })">
+                                <span class="label label-info">@t</span>
+                            </a>
+                            }
+                        }
+                        <a href="@Url.Action("Show", "Artikel", new { id = item.Id, titel = item.Titel })">
+                            <h2 class="post-title">
+                                @item.Titel
+                            </h2>
+                            <h3 class="post-subtitle">
+                                @item.Teaser
+                            </h3>
+                        </a>
+                        <p class="post-meta">Posted on @item.Erstellt.ToString("dd. MMMM yyyy HH:mm")</p>
+                        <a href="@Url.Action("Show", "Artikel", new { id = item.Id, titel = item.Titel })#disqus_thread">
+                        </a>
+
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <ul class="list-inline text-center">
+                                <li>
+                                    <a href="@Url.Action("Edit", "Artikel", new { id = item.Id, from = ViewBag.PageNumber })">
+                                        <span class="fa-stack fa-md">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-cog fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                                @if (item.Veroeffentlicht == null)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Publish", "Artikel", new { id = item.Id })">
+                                            <span class="fa-stack fa-md">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                @if (item.Veroeffentlicht != null && string.IsNullOrEmpty(item.FacebookId))
+                                {
+                                    <li>
+                                        <a href="@Url.Action("Facebook", "Artikel", new { id = item.Id })">
+                                            <span class="fa-stack fa-md">
+                                                <i class="fa fa-circle fa-stack-2x"></i>
+                                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                            </span>
+                                        </a>
+                                    </li>
+                                }
+                                <li>
+                                    <a href="@Url.Action("DeleteAsk", "Artikel", new { id = item.Id })">
+                                        <span class="fa-stack fa-md">
+                                            <i class="fa fa-circle fa-stack-2x"></i>
+                                            <i class="fa fa-ban fa-stack-1x fa-inverse"></i>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        }
+                    </div>
+                    <hr>
+                }
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action("Index", new { page, kategorie = ViewBag.Kategorie }), PagedListRenderOptions.MinimalWithPageCountText)             
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,21 @@
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <h3>Wirklich?</h3>
+            
+            <ul class="pager">
+                <li class="prev">
+                    <a href="@Url.Action("Delete", "Artikel", new { id= @Model})">Ja, Bitte!</a>
+                </li>
+                <li class="next">
+                    <a href="@Url.Action("Index", "Artikel")">Ach lieber nicht</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

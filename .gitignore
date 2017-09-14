@@ -3,3 +3,9 @@
 ################################################################################
 
 /Nerdfee2/bin
+/Nerdfee2/obj/Release
+/Nerdfee2/Web.config
+/Nerdfee2/Web.Debug.config
+/Nerdfee2/Web.Release.config
+/packages
+/Nerdfee2/obj/Debug

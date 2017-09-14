@@ -1,0 +1,70 @@
+@model Nerdfee2.Contracts.Article
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Meta {
+    @if (ViewBag.HasImage)
+    {
+        var urlBuilder =
+        new System.UriBuilder(Request.Url.AbsoluteUri)
+        {
+            Path = Url.Action("GetPicture", "Artikel", new { id = Model.Id }),
+            Query = null,
+        };
+
+        Uri uri = urlBuilder.Uri;
+        string url = urlBuilder.ToString();
+        <meta property="og:image" content="@url" />
+    }
+    else
+    {
+        <meta property="og:image" content="no" />
+    }
+    <meta property="og:title" content="@Model.Titel" />
+}
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                @if (ViewBag.HasImage)
+                {
+                    <img class="img-responsive" src="@Url.Action("GetPicture", "Artikel", new { id = Model.Id })" />
+                    <br/>
+                }
+                @foreach (var t in Model.Text.Split('\n'))
+                {
+                    if (t.StartsWith("http://"))
+                    {
+                        <a class="link-white" href="@t">@t</a><br/>
+                    }
+                    else
+                    {
+                        @t <br />
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</article>
+
+<div id="disqus_thread"></div>
+<script>
+
+var disqus_config = function () {
+                        this.page.url = 'http://www.nerdfee.de/Artikel/Show/@Model.Id?titel=@System.Uri.EscapeDataString(Model.Titel)#disqus_thread';  // Replace PAGE_URL with your page's canonical URL variable
+                        this.page.identifier = '@Model.ThreadId'; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                        this.page.title = '@Model.Titel';
+                    };
+
+                    (function() { // DON'T EDIT BELOW THIS LINE
+                        var d = document, s = d.createElement('script');
+                        s.src = 'https://nerdfee.disqus.com/embed.js';
+                        s.setAttribute('data-timestamp', +new Date());
+                        (d.head || d.body).appendChild(s);
+                    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
